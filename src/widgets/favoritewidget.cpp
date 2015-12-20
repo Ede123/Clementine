@@ -22,6 +22,7 @@
 #include <QSize>
 #include <QStyle>
 #include <QStylePainter>
+#include <QFontMetrics>
 
 #include "core/logging.h"
 
@@ -33,7 +34,10 @@ FavoriteWidget::FavoriteWidget(int tab_index, bool favorite, QWidget* parent)
       favorite_(favorite),
       on_(":/star-on.png"),
       off_(":/star-off.png"),
-      rect_(0, 0, kStarSize, kStarSize) {}
+      rect_(0, 0, kStarSize, kStarSize) {
+  QFontMetrics fontMetrics = QFontMetrics(this->font());
+  rect_.setTop(rect_.top() + fontMetrics.descent());
+}
 
 void FavoriteWidget::SetFavorite(bool favorite) {
   if (favorite_ != favorite) {
@@ -53,9 +57,9 @@ void FavoriteWidget::paintEvent(QPaintEvent* e) {
   QStylePainter p(this);
 
   if (favorite_) {
-    p.drawPixmap(rect_, on_);
+    p.drawItemPixmap(rect_, Qt::AlignVCenter, on_);
   } else {
-    p.drawPixmap(rect_, off_);
+    p.drawItemPixmap(rect_, Qt::AlignVCenter, off_);
   }
 }
 
